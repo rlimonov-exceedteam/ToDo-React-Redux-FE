@@ -1,0 +1,13 @@
+.mainpage-column {
+    width: 20%;
+    height: 85%;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+
+    h3 {
+        margin: 1rem auto;
+    }
+}
