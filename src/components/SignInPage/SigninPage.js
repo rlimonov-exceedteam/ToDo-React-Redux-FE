@@ -26,7 +26,8 @@ const SigninPage = ({ setIsAuth }) => {
     if (login) {
       if (!regexLogin.test(login)) {
         setAlert({
-          text: 'The login must contain latin letters and numbers only. It must have 6 symbols at least.',
+          text: `The login must contain latin letters and numbers only. 
+              It must have 6 symbols at least.`,
           opened: true
         });
         return;
@@ -67,7 +68,7 @@ const SigninPage = ({ setIsAuth }) => {
       return;
     }
 
-    await axios.post('http://localhost:8000/createNewUser', {
+    await axios.post(`${process.env.REACT_APP_SERVER_URL}/createNewUser`, {
       login,
       password
     }, {
@@ -82,15 +83,21 @@ const SigninPage = ({ setIsAuth }) => {
       if (e.message.endsWith('400')) {
         setAlert({
           text: "Error 400. This login is already used",
-          opened: true
+          isOpen: true
         });
       } else {
         setAlert({
           text: e.message,
-          opened: true
+          isOpen: true
         });
       }
     });
+  }
+
+  const authoriseOrRegister = () => {
+    isRegistration
+    ? register()
+    : authorise();
   }
 
   const authorise = async () => {
@@ -110,7 +117,7 @@ const SigninPage = ({ setIsAuth }) => {
       return;
     }
 
-    await axios.post('http://localhost:8000/authorise', {
+    await axios.post(`${process.env.REACT_APP_SERVER_URL}/authorise`, {
       login,
       password,
     }, {
@@ -198,11 +205,7 @@ const SigninPage = ({ setIsAuth }) => {
           <Button
             color="primary"
             size="lg"
-            onClick={
-              () => isRegistration
-                ? register()
-                : authorise()
-            }
+            onClick={authoriseOrRegister}
           >
             Submit
           </Button>

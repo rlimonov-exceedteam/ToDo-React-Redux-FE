@@ -15,7 +15,7 @@ const MainPage = ({ setIsAuth }) => {
     useEffect(() => {
         const getTasks = async () => {
             try {
-                await axios.get('http://localhost:8000/getAllTasks', 
+                await axios.get(`${process.env.REACT_APP_SERVER_URL}/getAllTasks`, 
                 {
                     withCredentials: true, 
                     credentials: 'include'
@@ -38,7 +38,7 @@ const MainPage = ({ setIsAuth }) => {
 
     const logout = async () => {
         try {
-            await axios.get('http://localhost:8000/logout', 
+            await axios.get(`${process.env.REACT_APP_SERVER_URL}/logout`, 
             {
                 withCredentials: true, 
                 credentials: 'include'
@@ -64,7 +64,7 @@ const MainPage = ({ setIsAuth }) => {
                 <Button
                     color="secondary"
                     size="lg"
-                    onClick={() => logout()}
+                    onClick={logout}
                 >
                     Log out
                 </Button>

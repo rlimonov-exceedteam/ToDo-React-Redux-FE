@@ -23,7 +23,7 @@ axios.interceptors.response.use(
   async (err) => {
       if (err.response.status === 401) {
         try {
-          const response = await axios.get('http://localhost:8000/refreshToken', {
+          const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/refreshToken`, {
             withCredentials: true,
             credentials: 'include'
           })

@@ -14,7 +14,6 @@ import axios from 'axios';
 const UpdateTaskModal = ({
     setIsUpdateModalOpened,
     isUpdateModalOpened,
-    setTaskText,
     setAllTasks,
     allTasks,
     task
@@ -28,7 +27,7 @@ const UpdateTaskModal = ({
     const updateTaskText = async () => {
         const token = localStorage.getItem('token');
 
-        await axios.patch(`http://localhost:8000/updateTask`, {
+        await axios.patch(`${process.env.REACT_APP_SERVER_URL}/updateTask`, {
             taskText: modalTaskText,
             _id
         }, {
@@ -37,11 +36,8 @@ const UpdateTaskModal = ({
             }
         })
         .then(() => {
-            allTasks.map(elem => {
-                if(elem._id === _id) {
-                    elem.taskText = modalTaskText;
-                }
-            });
+            const index = allTasks.findIndex(elem => elem._id === _id);
+            allTasks[index].taskText = modalTaskText;
 
             setAllTasks([...allTasks]);
             setIsUpdateModalOpened(false);
@@ -49,7 +45,7 @@ const UpdateTaskModal = ({
         .catch(e => {
             setAlert({
                 text: e.message,
-                opened: true
+                isOpen: true
             });
         });
     }
@@ -59,7 +55,6 @@ const UpdateTaskModal = ({
             <Modal
                 isOpen={isUpdateModalOpened}
                 centered
-                fullscreen="lg"
                 size=""
                 toggle={() => setIsUpdateModalOpened(false)}
             >
@@ -81,11 +76,10 @@ const UpdateTaskModal = ({
                 <ModalFooter>
                     <Button
                         color="primary"
-                        onClick={() => updateTaskText()}
+                        onClick={updateTaskText}
                     >
                         Submit
                     </Button>
-                    {' '}
                     <Button onClick={() => setIsUpdateModalOpened(false)}>
                         Cancel
                     </Button>

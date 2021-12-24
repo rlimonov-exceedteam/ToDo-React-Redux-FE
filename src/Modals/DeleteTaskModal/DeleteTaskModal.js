@@ -21,7 +21,7 @@ const DeleteTaskModal = ({
     const deleteTask = async () => {
         const token = localStorage.getItem('token');
 
-        await axios.delete(`http://localhost:8000/deleteTask?_id=${_id}`, {
+        await axios.delete(`${process.env.REACT_APP_SERVER_URL}/deleteTask?_id=${_id}`, {
             headers: {
                 token
             }
@@ -34,7 +34,7 @@ const DeleteTaskModal = ({
         .catch(e => {
             setAlert({
                 text: e.message,
-                opened: true
+                isOpen: true
               });
         })
     }
@@ -44,7 +44,6 @@ const DeleteTaskModal = ({
             <Modal
                 isOpen={isDeleteModalOpened}
                 centered
-                fullscreen="lg"
                 size=""
                 toggle={() => setIsDeleteModalOpened(false)}
             >
@@ -54,7 +53,7 @@ const DeleteTaskModal = ({
                 <ModalFooter>
                     <Button
                         color="primary"
-                        onClick={() => deleteTask()}
+                        onClick={deleteTask}
                     >
                         Delete
                     </Button>

@@ -26,7 +26,7 @@ const Task = ({
     const changeTaskStage = async (direction) => {
         const token = localStorage.getItem('token');
 
-        await axios.patch(`http://localhost:8000/changeTaskStage`, {
+        await axios.patch(`${process.env.REACT_APP_SERVER_URL}/changeTaskStage`, {
             stage: direction === 'left' ? --taskStage : ++taskStage,
             _id
         },
@@ -54,28 +54,32 @@ const Task = ({
             <div className="icons">
                 { 
                     !noLeftArrow &&
-                    <div className="icon">
-                        <BsArrowLeft
-                            onClick={() => changeTaskStage('left')}
-                        />
+                    <div 
+                        className="icon"
+                        onClick={() => changeTaskStage('left')}
+                    >
+                        <BsArrowLeft />
                     </div>
                 }
-                <div className="icon">
-                    <BsFillPencilFill
-                        onClick={() => setIsUpdateModalOpened(true)}
-                    />
+                <div 
+                    className="icon"
+                    onClick={() => setIsUpdateModalOpened(true)}
+                >
+                    <BsFillPencilFill />
                 </div>
-                <div className="icon">
-                    <BsTrashFill
-                        onClick={() => setIsDeleteModalOpened(true)}
-                    />
+                <div 
+                    className="icon"
+                    onClick={() => setIsDeleteModalOpened(true)}
+                >
+                    <BsTrashFill />
                 </div>
                 {
                     !noRightArrow &&
-                    <div className="icon">
-                        <BsArrowRight
-                            onClick={() => changeTaskStage('right')}
-                        />
+                    <div 
+                        className="icon"
+                        onClick={() => changeTaskStage('right')}
+                    >
+                        <BsArrowRight />
                     </div>
                 }
             </div>

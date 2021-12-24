@@ -19,7 +19,7 @@ const AddTaskModal = ({
     const [taskText, setTaskText] = useState('');
 
     const addTask = () => {
-        axios.post('http://localhost:8000/createNewTask', {
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/createNewTask`, {
             taskText,
             stage: 1,
         }, {
@@ -37,7 +37,6 @@ const AddTaskModal = ({
             <Modal
                 isOpen={isAddModalOpened}
                 centered
-                fullscreen="lg"
                 size=""
                 toggle={() => setIsAddModalOpened(false)}
             >
@@ -59,11 +58,10 @@ const AddTaskModal = ({
                 <ModalFooter>
                     <Button
                         color="primary"
-                        onClick={() => addTask()}
+                        onClick={addTask}
                     >
                         Submit
                     </Button>
-                    {' '}
                     <Button onClick={() => setIsAddModalOpened(false)}>
                         Cancel
                     </Button>

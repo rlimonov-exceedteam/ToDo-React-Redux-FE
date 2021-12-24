@@ -31,16 +31,14 @@
         }
 
         footer {
+            cursor: pointer;
+
             button {
                 margin-top: 10px;
             }
 
             p {
                 margin-top: 25px;
-            }
-
-            p:hover {
-                cursor: pointer;
             }
         }
     }
