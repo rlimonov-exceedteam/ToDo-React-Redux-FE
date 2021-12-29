@@ -31,6 +31,7 @@ const TaskInfoModal = ({
         }
 
         getComments();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleComment = () => {

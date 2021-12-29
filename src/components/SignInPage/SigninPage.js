@@ -161,14 +161,14 @@ const SigninPage = () => {
             <div className="signin-input-wrapper">
               <Label
                 for="repeated-password"
-                size="lg"
+                bssize="lg"
               >
                 Repeate your password
               </Label>
               <Input
                 id="repeated-password"
                 name="repeated-password"
-                size="lg"
+                bssize="lg"
                 placeholder="Repeate your password, please"
                 value={repeatedPassword}
                 onChange={(e) => setRepeatedPassword(e.currentTarget.value)}
@@ -180,7 +180,7 @@ const SigninPage = () => {
         <footer>
           <Button
             color="primary"
-            size="lg"
+            bssize="lg"
             onClick={authoriseOrRegister}
           >
             Submit
