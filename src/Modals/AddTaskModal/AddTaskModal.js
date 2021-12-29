@@ -37,7 +37,7 @@ const AddTaskModal = ({ setIsAddModalOpened, isAddModalOpened, }) => {
             <Modal
                 isOpen={isAddModalOpened}
                 centered
-                size=""
+                bssize=""
                 toggle={() => setIsAddModalOpened(false)}
             >
                 <ModalHeader toggle={() => setIsAddModalOpened(false)}>

@@ -59,7 +59,7 @@ const MainPage = () => {
                 </h1>
                 <Button
                     color="secondary"
-                    size="lg"
+                    bssize="lg"
                     onClick={logout}
                 >
                     Log out
@@ -67,7 +67,7 @@ const MainPage = () => {
             </div>
             <Button
                 color="primary"
-                size="lg"
+                bssize="lg"
                 onClick={() => setIsAddModalOpened(true)}
             >
                 Add new task

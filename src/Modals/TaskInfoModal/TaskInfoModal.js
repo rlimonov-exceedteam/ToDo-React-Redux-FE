@@ -67,7 +67,7 @@ const TaskInfoModal = ({
         <Modal
           isOpen={isTaskInfoModalOpened}
           fullscreen="md"
-          size=""
+          bssize=""
           toggle={() => setIsTaskInfoModalOpened(false)}
         >
           <ModalHeader toggle={() => setIsTaskInfoModalOpened(false)}>
@@ -96,7 +96,7 @@ const TaskInfoModal = ({
             <div className="buttons">
                 <Button 
                   color="primary" 
-                  size="sm" 
+                  bssize="sm" 
                   onClick={handleComment}
                 >
                     {
@@ -109,7 +109,7 @@ const TaskInfoModal = ({
                   commentOpened && 
                   <Button 
                     color="secondary" 
-                    size="sm" 
+                    bssize="sm" 
                     onClick={undoComment}
                   >
                       Undo

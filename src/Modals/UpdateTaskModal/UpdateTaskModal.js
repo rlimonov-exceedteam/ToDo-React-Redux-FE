@@ -48,7 +48,7 @@ const UpdateTaskModal = ({
             <Modal
                 isOpen={isUpdateModalOpened}
                 centered
-                size=""
+                bssize=""
                 toggle={() => setIsUpdateModalOpened(false)}
             >
                 <ModalHeader toggle={() => setIsUpdateModalOpened(false)}>

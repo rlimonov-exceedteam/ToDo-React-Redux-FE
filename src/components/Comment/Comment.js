@@ -57,14 +57,14 @@ const Comment = ({ comment, allComments, setAllComments }) => {
                             onChange={(e) => setText(e.currentTarget.value)}
                         />
                         <Button 
-                            size="sm"
+                            bsSize="sm"
                             color="primary"
                             onClick={changeCommentText}
                         >
                             Save
                         </Button>
                         <Button 
-                            size="sm" 
+                            bsSize="sm" 
                             outline
                             onClick={undo}
                         >

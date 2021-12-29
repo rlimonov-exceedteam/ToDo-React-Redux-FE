@@ -34,7 +34,7 @@ const DeleteTaskModal = ({ setIsDeleteModalOpened, isDeleteModalOpened, _id }) =
             <Modal
                 isOpen={isDeleteModalOpened}
                 centered
-                size=""
+                bssize=""
                 toggle={() => setIsDeleteModalOpened(false)}
             >
                 <ModalHeader>

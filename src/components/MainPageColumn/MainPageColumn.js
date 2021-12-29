@@ -21,7 +21,7 @@ const MainPageColumn = ({
                     {name}
                 </h3>
                 <Button 
-                    size="sm"
+                    bssize="sm"
                     color="primary"
                     onClick={toggleExpanded}
                 >

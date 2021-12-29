@@ -125,14 +125,14 @@ const SigninPage = () => {
           <div className="signin-input-wrapper">
             <Label
               for="login"
-              size="lg"
+              bssize="lg"
             >
               Login
             </Label>
             <Input
               id="login"
               name="login"
-              size="lg"
+              bssize="lg"
               placeholder="Enter your login, please"
               value={login}
               onChange={(e) => setLogin(e.currentTarget.value)}
@@ -142,14 +142,14 @@ const SigninPage = () => {
           <div className="signin-input-wrapper">
             <Label
               for="password"
-              size="lg"
+              bssize="lg"
             >
               Password
             </Label>
             <Input
               id="password"
               name="password"
-              size="lg"
+              bssize="lg"
               placeholder="Enter your password, please"
               value={password}
               onChange={(e) => setPassword(e.currentTarget.value)}
