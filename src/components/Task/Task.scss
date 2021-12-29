@@ -5,9 +5,14 @@
     border-radius: 15px;
     font-size: 0.5rem;
 
-    p {
+    .taskName {
+        cursor: pointer;
+    }
+
+    h6{
         text-align: justify;
-        font-size: 1rem;
+        margin: 0;
+        padding-bottom: 0.5rem;
     }
 
     .icons {

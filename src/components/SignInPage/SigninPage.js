@@ -4,18 +4,20 @@ import {
   Label,
   Input,
 } from 'reactstrap';
-import { useHistory, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setAlert } from '../../redux/slices/errorAlertSlice';
+import { allowAccess } from '../../redux/slices/isAuthSlice';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import ErrorAlert from '../ErrorAlert/ErrorAlert';
 import './SigninPage.scss';
 
-const SigninPage = ({ setIsAuth }) => {
+const SigninPage = () => {
+  const dispatch = useDispatch();
+
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
   const [isRegistration, setIsRegistration] = useState(false);
-  const [alert, setAlert] = useState({ isOpen: false, text: '' });
-  const { isOpen, text } = alert;
 
   const history = useHistory();
 
@@ -25,46 +27,31 @@ const SigninPage = ({ setIsAuth }) => {
 
     if (login) {
       if (!regexLogin.test(login)) {
-        setAlert({
-          text: `The login must contain latin letters and numbers only. 
-              It must have 6 symbols at least.`,
-          opened: true
-        });
+        dispatch(setAlert(`The login must contain latin letters and numbers only. 
+          It must have 6 symbols at least.`));
         return;
       }
     } else {
-      setAlert({
-        text: 'Please, print your login.',
-        opened: true
-      });
+      dispatch(setAlert('Please, print your login.'));
       return;
     }
 
     if (password) {
       if (!regexPassword.test(password)) {
         setPassword('');
-        setAlert({
-          text: `The password must contain only latin letters and numbers. 
-              It must have at least 1 capital and 1 lowercase letter, and 1 number.
-              It mustn't be shorter than 6 symbols.`,
-          opened: true
-        });
+        dispatch(setAlert(`The password must contain only latin letters and numbers. 
+          It must have at least 1 capital and 1 lowercase letter, and 1 number.
+          It mustn't be shorter than 6 symbols.`));
         return;
       }
     } else {
-      setAlert({
-        text: 'Please, print your password.',
-        opened: true
-      });
+      dispatch(setAlert('Please, print your password.'));
       return;
     }
 
     if (password !== repeatedPassword) {
       setRepeatedPassword('');
-      setAlert({
-        text: 'Password dismatch.',
-        opened: true
-      });
+      dispatch(setAlert('Password dismatch.'));
       return;
     }
 
@@ -74,22 +61,18 @@ const SigninPage = ({ setIsAuth }) => {
     }, {
       withCredentials: true, 
       credentials: 'include'
-    }).then(result => {
+    })
+    .then(result => {
       const { data } = result;
-      setIsAuth(true);
+      dispatch(allowAccess());
       localStorage.setItem('token', data.accessToken);
       history.push('/mainPage');
-    }).catch(e => {
+    })
+    .catch(e => {
       if (e.message.endsWith('400')) {
-        setAlert({
-          text: "Error 400. This login is already used",
-          isOpen: true
-        });
+        dispatch(setAlert('Error 400. This login is already used'));
       } else {
-        setAlert({
-          text: e.message,
-          isOpen: true
-        });
+        dispatch(setAlert(e.message));
       }
     });
   }
@@ -102,18 +85,12 @@ const SigninPage = ({ setIsAuth }) => {
 
   const authorise = async () => {
     if (!login) {
-      setAlert({
-        text: 'Please, print your login.',
-        opened: true
-      });
+      dispatch(setAlert('Please, print your login.'));
       return;
     }
 
     if (!password) {
-      setAlert({
-        text: 'Please, print your password.',
-        opened: true
-      });
+      dispatch(setAlert('Please, print your password.'));
       return;
     }
 
@@ -123,16 +100,15 @@ const SigninPage = ({ setIsAuth }) => {
     }, {
       withCredentials: true, 
       credentials: 'include'
-    }).then(result => {
+    })
+    .then(result => {
       const { data } = result;
-      setIsAuth(true);
+      dispatch(allowAccess());
       localStorage.setItem('token', data.accessToken);
       history.push('/mainPage');
-    }).catch(e => {
-      setAlert({
-        text: e.message,
-        opened: true
-      });
+    })
+    .catch(e => {
+      dispatch(setAlert(e.message));
     });
   }
 
@@ -220,11 +196,6 @@ const SigninPage = ({ setIsAuth }) => {
           </p>
         </footer>
       </div>
-      <ErrorAlert
-        text={text}
-        isOpen={isOpen}
-        setAlert={setAlert}
-      />
     </div>
   )
 }

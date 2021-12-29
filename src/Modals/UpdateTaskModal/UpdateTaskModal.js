@@ -8,21 +8,20 @@ import {
     Modal,
     Label
 } from 'reactstrap';
-import ErrorAlert from '../../components/ErrorAlert/ErrorAlert';
+import { useDispatch } from 'react-redux';
+import { setAlert } from '../../redux/slices/errorAlertSlice';
+import { updateTaskTextInStore } from '../../redux/slices/taskSlice';
 import axios from 'axios';
 
 const UpdateTaskModal = ({
     setIsUpdateModalOpened,
     isUpdateModalOpened,
-    setAllTasks,
-    allTasks,
     task
 }) => {
     const { taskText, _id } = task;
+    const dispatch = useDispatch();
 
     const [modalTaskText, setModalTaskText] = useState(taskText);
-    const [alert, setAlert] = useState({ isOpen: false, text: '' });
-    const { isOpen, text } = alert;
 
     const updateTaskText = async () => {
         const token = localStorage.getItem('token');
@@ -31,22 +30,16 @@ const UpdateTaskModal = ({
             taskText: modalTaskText,
             _id
         }, {
-            headers: { 
-                token 
+            headers: {
+                token
             }
         })
         .then(() => {
-            const index = allTasks.findIndex(elem => elem._id === _id);
-            allTasks[index].taskText = modalTaskText;
-
-            setAllTasks([...allTasks]);
+            dispatch(updateTaskTextInStore({ taskText: modalTaskText, _id }));
             setIsUpdateModalOpened(false);
         })
         .catch(e => {
-            setAlert({
-                text: e.message,
-                isOpen: true
-            });
+            dispatch(setAlert(e.message));
         });
     }
 
@@ -85,11 +78,6 @@ const UpdateTaskModal = ({
                     </Button>
                 </ModalFooter>
             </Modal>
-            <ErrorAlert
-                text={text}
-                isOpen={isOpen}
-                setAlert={setAlert}
-            />
         </div>
     )
 }

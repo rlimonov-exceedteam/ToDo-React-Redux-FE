@@ -5,52 +5,47 @@ import {
     BsFillPencilFill,
     BsTrashFill
 } from "react-icons/bs";
-import axios from 'axios';
+import { updateStageInStore } from '../../redux/slices/taskSlice';
+import TaskInfoModal from '../../Modals/TaskInfoModal/TaskInfoModal';
 import DeleteTaskModal from '../../Modals/DeleteTaskModal/DeleteTaskModal';
 import UpdateTaskModal from '../../Modals/UpdateTaskModal/UpdateTaskModal';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import './Task.scss';
 
 const Task = ({
     noRightArrow,
     noLeftArrow,
-    setAllTasks,
-    setTaskText,
     taskStage,
-    allTasks,
     task
 }) => {
+    const dispatch = useDispatch();
+
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const [isUpdateModalOpened, setIsUpdateModalOpened] = useState(false);
-    const { taskText, _id } = task;
+    const [isTaskInfoModalOpened, setIsTaskInfoModalOpened] = useState(false);
+    const { taskName, _id } = task;
 
     const changeTaskStage = async (direction) => {
-        const token = localStorage.getItem('token');
-
         await axios.patch(`${process.env.REACT_APP_SERVER_URL}/changeTaskStage`, {
             stage: direction === 'left' ? --taskStage : ++taskStage,
             _id
-        },
-        {
-            headers: {
-                token
-            }
-        }).then(() => {
-            allTasks.map(elem => {
-                if (elem._id === _id) {
-                    elem.stage = taskStage;
-                }
-            });
-
-            setAllTasks([...allTasks]);
         })
-        
+        .then(() => {
+            dispatch(updateStageInStore({ stage: taskStage, _id }));
+        });
     }
 
     return (
         <div className="task">
-            <p>
-                {taskText}
-            </p>
+            <div 
+                className="taskName" 
+                onClick={() => setIsTaskInfoModalOpened(true)}
+            >
+                <h6>
+                    {taskName}
+                </h6>
+            </div>
             <div className="icons">
                 { 
                     !noLeftArrow &&
@@ -87,8 +82,6 @@ const Task = ({
                 <DeleteTaskModal
                     setIsDeleteModalOpened={setIsDeleteModalOpened}
                     isDeleteModalOpened={isDeleteModalOpened}
-                    setAllTasks={setAllTasks}
-                    allTasks={allTasks}
                     _id={_id}
                 />
             }
@@ -96,9 +89,13 @@ const Task = ({
                 <UpdateTaskModal
                     setIsUpdateModalOpened={setIsUpdateModalOpened}
                     isUpdateModalOpened={isUpdateModalOpened}
-                    setAllTasks={setAllTasks}
-                    setTaskText={setTaskText}
-                    allTasks={allTasks}
+                    task={task}
+                />
+            }
+            {isTaskInfoModalOpened &&
+                <TaskInfoModal 
+                    setIsTaskInfoModalOpened={setIsTaskInfoModalOpened}
+                    isTaskInfoModalOpened={isTaskInfoModalOpened}
                     task={task}
                 />
             }

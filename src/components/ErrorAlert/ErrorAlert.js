@@ -1,13 +1,18 @@
+import { removeAlert } from '../../redux/slices/errorAlertSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { Alert } from 'reactstrap';
 import './ErrorAlert.scss';
 
-const ErrorAlert = ({ isOpen, text, setAlert }) => {
+const ErrorAlert = () => {
+    const { isOpened, text } = useSelector(state => state.errorAlert.alertData);
+    const dispatch = useDispatch();
+
     return (
         <div className="alert-wrapper">
             <Alert
-                isOpen={isOpen}
+                isOpen={isOpened}
                 color="danger"
-                toggle={() => setAlert({ isOpen: false, text })}
+                toggle={() => dispatch(removeAlert())}
             >
                 {text}
             </Alert>

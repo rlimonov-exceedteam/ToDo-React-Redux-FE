@@ -8,25 +8,25 @@ import {
     Modal,
     Label
 } from 'reactstrap';
+import { useDispatch } from 'react-redux';
+import { addTaskToStore } from '../../redux/slices/taskSlice';
 import axios from 'axios';
 
-const AddTaskModal = ({
-    setIsAddModalOpened,
-    isAddModalOpened,
-    setAllTasks,
-    allTasks
-}) => {
+const AddTaskModal = ({ setIsAddModalOpened, isAddModalOpened, }) => {
+    const dispatch = useDispatch();
     const [taskText, setTaskText] = useState('');
+    const [taskName, setTaskName] = useState('');
 
     const addTask = () => {
         axios.post(`${process.env.REACT_APP_SERVER_URL}/createNewTask`, {
             taskText,
+            taskName,
             stage: 1,
         }, {
-            withCredentials: true, 
+            withCredentials: true,
             credentials: 'include'
         }).then(result => {
-            setAllTasks([...allTasks, result.data])
+            dispatch(addTaskToStore(result.data));
             setTaskText('');
             setIsAddModalOpened(false);
         })
@@ -44,6 +44,15 @@ const AddTaskModal = ({
                     Add new task
                 </ModalHeader>
                 <ModalBody>
+                    <Label for="printName">
+                        Name a task
+                    </Label>
+                    <Input
+                        id="printName"
+                        name="printName"
+                        value={taskName}
+                        onChange={(e) => setTaskName(e.currentTarget.value)}
+                    />
                     <Label for="exampleText">
                         Print a description
                     </Label>
