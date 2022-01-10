@@ -18,16 +18,6 @@ const Task = ({
     const [isTaskInfoModalOpened, setIsTaskInfoModalOpened] = useState(false);
     const { taskName, _id } = task;
 
-    const changeTaskStage = async (direction) => {
-        dispatch(updateStageMiddleware({ 
-            stage: direction === 'left' ? --taskStage : ++taskStage,
-            _id 
-        }))
-        .catch(e => {
-
-        })
-    }
-
     return (
         <div className="task">
             <div 
