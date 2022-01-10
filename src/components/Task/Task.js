@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import { BsFillPencilFill, BsTrashFill } from "react-icons/bs";
-import { updateStageMiddleware } from '../../redux/slices/taskSlice';
 import TaskInfoModal from '../../Modals/TaskInfoModal/TaskInfoModal';
 import DeleteTaskModal from '../../Modals/DeleteTaskModal/DeleteTaskModal';
 import UpdateTaskModal from '../../Modals/UpdateTaskModal/UpdateTaskModal';
-import { useDispatch } from 'react-redux';
 import './Task.scss';
 
 const Task = ({
     taskStage,
     task
 }) => {
-    const dispatch = useDispatch();
-
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const [isUpdateModalOpened, setIsUpdateModalOpened] = useState(false);
     const [isTaskInfoModalOpened, setIsTaskInfoModalOpened] = useState(false);
