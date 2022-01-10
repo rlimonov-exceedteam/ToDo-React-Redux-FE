@@ -11,7 +11,6 @@ import {
 import { useDispatch } from 'react-redux';
 import { setAlert } from '../../redux/slices/errorAlertSlice';
 import { updateTaskMiddleware } from '../../redux/slices/taskSlice';
-import axios from 'axios';
 
 const UpdateTaskModal = ({
     setIsUpdateModalOpened,

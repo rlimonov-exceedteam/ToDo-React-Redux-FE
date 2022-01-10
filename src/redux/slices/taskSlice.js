@@ -35,7 +35,7 @@ export const addTaskMiddleware = createAsyncThunk(
 export const updateTaskMiddleware = createAsyncThunk(
   'task/updateTaskMiddleware',
   async ({ taskText, _id }) => {
-    const response = await axios.patch(`${process.env.REACT_APP_SERVER_URL}/updateTask`,
+    await axios.patch(`${process.env.REACT_APP_SERVER_URL}/updateTask`,
     {
       taskText,
       _id
@@ -97,7 +97,6 @@ export const tasksSlice = createSlice({
   },
   extraReducers: {
     [fetchInitialTasks.fulfilled]: (state, action) => {
-      // Add user to the state array
       state.tasks = action.payload;
     },
     [addTaskMiddleware.fulfilled]: (state, action) => {
