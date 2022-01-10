@@ -65,7 +65,9 @@
 
 .expanded {
     display: block;
-    height: fit-content;
+    --heightA: fit-content;
+    height: calc(var(--heightA) + 75px);
+    min-height: 70px;
     max-height: 420px;
     overflow-y: scroll;
 

@@ -1,21 +1,13 @@
 import { useState } from 'react';
-import {
-    BsArrowRight,
-    BsArrowLeft,
-    BsFillPencilFill,
-    BsTrashFill
-} from "react-icons/bs";
-import { updateStageInStore } from '../../redux/slices/taskSlice';
+import { BsFillPencilFill, BsTrashFill } from "react-icons/bs";
+import { updateStageMiddleware } from '../../redux/slices/taskSlice';
 import TaskInfoModal from '../../Modals/TaskInfoModal/TaskInfoModal';
 import DeleteTaskModal from '../../Modals/DeleteTaskModal/DeleteTaskModal';
 import UpdateTaskModal from '../../Modals/UpdateTaskModal/UpdateTaskModal';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import './Task.scss';
 
 const Task = ({
-    noRightArrow,
-    noLeftArrow,
     taskStage,
     task
 }) => {
@@ -27,13 +19,13 @@ const Task = ({
     const { taskName, _id } = task;
 
     const changeTaskStage = async (direction) => {
-        await axios.patch(`${process.env.REACT_APP_SERVER_URL}/changeTaskStage`, {
+        dispatch(updateStageMiddleware({ 
             stage: direction === 'left' ? --taskStage : ++taskStage,
-            _id
+            _id 
+        }))
+        .catch(e => {
+
         })
-        .then(() => {
-            dispatch(updateStageInStore({ stage: taskStage, _id }));
-        });
     }
 
     return (
@@ -47,15 +39,6 @@ const Task = ({
                 </h6>
             </div>
             <div className="icons">
-                { 
-                    !noLeftArrow &&
-                    <div 
-                        className="icon"
-                        onClick={() => changeTaskStage('left')}
-                    >
-                        <BsArrowLeft />
-                    </div>
-                }
                 <div 
                     className="icon"
                     onClick={() => setIsUpdateModalOpened(true)}
@@ -68,15 +51,6 @@ const Task = ({
                 >
                     <BsTrashFill />
                 </div>
-                {
-                    !noRightArrow &&
-                    <div 
-                        className="icon"
-                        onClick={() => changeTaskStage('right')}
-                    >
-                        <BsArrowRight />
-                    </div>
-                }
             </div>
             {isDeleteModalOpened &&
                 <DeleteTaskModal

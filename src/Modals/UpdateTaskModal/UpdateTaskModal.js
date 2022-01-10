@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 import { useDispatch } from 'react-redux';
 import { setAlert } from '../../redux/slices/errorAlertSlice';
-import { updateTaskTextInStore } from '../../redux/slices/taskSlice';
+import { updateTaskMiddleware } from '../../redux/slices/taskSlice';
 import axios from 'axios';
 
 const UpdateTaskModal = ({
@@ -23,19 +23,9 @@ const UpdateTaskModal = ({
 
     const [modalTaskText, setModalTaskText] = useState(taskText);
 
-    const updateTaskText = async () => {
-        const token = localStorage.getItem('token');
-
-        await axios.patch(`${process.env.REACT_APP_SERVER_URL}/updateTask`, {
-            taskText: modalTaskText,
-            _id
-        }, {
-            headers: {
-                token
-            }
-        })
+    const updateTaskText = async () => { 
+        dispatch(updateTaskMiddleware({ taskText: modalTaskText, _id }))
         .then(() => {
-            dispatch(updateTaskTextInStore({ taskText: modalTaskText, _id }));
             setIsUpdateModalOpened(false);
         })
         .catch(e => {

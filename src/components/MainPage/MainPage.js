@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAlert } from '../../redux/slices/errorAlertSlice';
-import { addInitialTasks } from '../../redux/slices/taskSlice';
+import { fetchInitialTasks, updateStageMiddleware } from '../../redux/slices/taskSlice';
 import { denyAccess } from '../../redux/slices/isAuthSlice';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 import MainPageColumn from '../MainPageColumn/MainPageColumn';
 import AddTaskModal from '../../Modals/AddTaskModal/AddTaskModal';
 import axios from 'axios';
@@ -18,29 +18,21 @@ const MainPage = () => {
     const updateColumns = () => [
         {
             columnId: '0',
-            noLeftArrow: true,
-            noRightArrow: false,
             name: 'Tasks',
             tasks: allTasks.filter(elem => elem.stage === 1),
         },
         {
             columnId: '1',
-            noLeftArrow: false,
-            noRightArrow: false,
             name: 'In progress',
             tasks: allTasks.filter(elem => elem.stage === 2),
         },
         {
             columnId: '2',
-            noLeftArrow: false,
-            noRightArrow: false,
             name: 'QA',
             tasks: allTasks.filter(elem => elem.stage === 3),
         },
         {
             columnId: '3',
-            noLeftArrow: false,
-            noRightArrow: true,
             name: 'Finished',
             tasks: allTasks.filter(elem => elem.stage === 4),
         },
@@ -51,15 +43,8 @@ const MainPage = () => {
     useEffect(() => {
         const getAllTasks = async () => {
             try {
-                await axios.get(`${process.env.REACT_APP_SERVER_URL}/getAllTasks`, 
-                {
-                    withCredentials: true, 
-                    credentials: 'include'
-                })
-                .then(result => {
-                    dispatch(addInitialTasks(result.data));
-                })
-            } catch(e) {
+                dispatch(fetchInitialTasks());
+            } catch (e) {
                 dispatch(setAlert(e.message));
                 dispatch(denyAccess());
                 localStorage.clear();
@@ -78,22 +63,22 @@ const MainPage = () => {
 
     const logout = async () => {
         try {
-            await axios.get(`${process.env.REACT_APP_SERVER_URL}/logout`, 
-            {
-                withCredentials: true, 
-                credentials: 'include'
-            })
-            .then(() => {
-                dispatch(denyAccess());
-                localStorage.clear();
-            })
-        } catch(e) {
+            await axios.get(`${process.env.REACT_APP_SERVER_URL}/logout`,
+                {
+                    withCredentials: true,
+                    credentials: 'include'
+                })
+                .then(() => {
+                    dispatch(denyAccess());
+                    localStorage.clear();
+                })
+        } catch (e) {
             dispatch(setAlert(e.message));
         };
     }
 
     const onDragEnd = (result) => {
-        const { source, destination } = result;
+        const { source, destination, draggableId } = result;
 
         if (!destination) return;
 
@@ -109,18 +94,20 @@ const MainPage = () => {
             const sourceItems = [...sourceColumn.tasks];
             const destItems = [...destColumn.tasks];
             const [removed] = sourceItems.splice(source.index, 1);
-            
+
             destItems.splice(destination.index, 0, removed);
             const newArr = [...columns];
-            newArr[destination.droppableId] = {...destColumn, tasks: destItems};
-            newArr[source.droppableId] = {...sourceColumn, tasks: sourceItems};
+            newArr[destination.droppableId] = { ...destColumn, tasks: destItems };
+            newArr[source.droppableId] = { ...sourceColumn, tasks: sourceItems };
 
             setColumns([
                 ...newArr
             ]);
+
+            dispatch(updateStageMiddleware({ stage: Number(destination.droppableId) + 1, _id: draggableId }))
         }
     }
-    
+
     return (
         <div className="mainpage-wrapper">
             <div className="header-wrapper">
@@ -144,40 +131,26 @@ const MainPage = () => {
             </Button>
             <div className="mainpage-columns-wrapper">
                 <DragDropContext onDragEnd={result => onDragEnd(result)}>
-                    {columns.map(({noLeftArrow, columnId, noRightArrow, name, tasks}, i) => {
+                    {columns.map(({ noLeftArrow, columnId, noRightArrow, name, tasks }, i) => {
                         return (
-                            <Droppable droppableId={columnId} key={i}>
-                                {(provided, snapshot) => {
-                                    return (
-                                        <div
-                                            {...provided.droppableProps}
-                                            ref={provided.innerRef}
-                                            className="mainpage-column"
-                                            style={{
-                                                background: snapshot.isDraggingOver
-                                                ? "lightblue"
-                                                : "white",
-                                            }}
-                                        >
-                                            <MainPageColumn 
-                                                noLeftArrow={noLeftArrow}
-                                                noRightArrow={noRightArrow}
-                                                name={name}
-                                                tasks={tasks}
-                                                key={columnId}
-                                            />
-                                        </div>
-                                    )
-                                }}
-                            </Droppable>
+
+                            <div className="mainpage-column">
+                                <MainPageColumn
+                                    columnId={columnId}
+                                    name={name}
+                                    i={i}
+                                    tasks={tasks}
+                                    key={columnId}
+                                />
+                            </div>
                         )
                     })}
                 </DragDropContext>
-                
+
             </div>
             {
-                isAddModalOpened && 
-                <AddTaskModal 
+                isAddModalOpened &&
+                <AddTaskModal
                     isAddModalOpened={isAddModalOpened}
                     setIsAddModalOpened={setIsAddModalOpened}
                 />

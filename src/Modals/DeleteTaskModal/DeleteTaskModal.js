@@ -6,27 +6,19 @@ import {
 } from 'reactstrap';
 import { useDispatch } from 'react-redux';
 import { setAlert } from '../../redux/slices/errorAlertSlice';
-import { deleteTaskFromStore } from '../../redux/slices/taskSlice';
-import axios from 'axios';
+import { deleteTaskMiddleware } from '../../redux/slices/taskSlice';
 
 const DeleteTaskModal = ({ setIsDeleteModalOpened, isDeleteModalOpened, _id }) => {
     const dispatch = useDispatch();
 
     const deleteTask = async () => {
-        const token = localStorage.getItem('token');
-
-        await axios.delete(`${process.env.REACT_APP_SERVER_URL}/deleteTask?_id=${_id}`, {
-            headers: {
-                token
-            }
+        dispatch(deleteTaskMiddleware(_id))
+        .then(() => {
+            setIsDeleteModalOpened(false);
         })
-            .then(() => {
-                dispatch(deleteTaskFromStore(_id));
-                setIsDeleteModalOpened(false);
-            })
-            .catch(e => {
-                dispatch(setAlert(e.message));
-            })
+        .catch(e => {
+            dispatch(setAlert(e.message));
+        });
     }
 
     return (

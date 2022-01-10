@@ -8,8 +8,9 @@ import {
     Modal,
     Label
 } from 'reactstrap';
+import { setAlert } from '../../redux/slices/errorAlertSlice';
 import { useDispatch } from 'react-redux';
-import { addTaskToStore } from '../../redux/slices/taskSlice';
+import { addTaskToStore, addTaskMiddleware } from '../../redux/slices/taskSlice';
 import axios from 'axios';
 
 const AddTaskModal = ({ setIsAddModalOpened, isAddModalOpened, }) => {
@@ -18,18 +19,20 @@ const AddTaskModal = ({ setIsAddModalOpened, isAddModalOpened, }) => {
     const [taskName, setTaskName] = useState('');
 
     const addTask = () => {
-        axios.post(`${process.env.REACT_APP_SERVER_URL}/createNewTask`, {
-            taskText,
-            taskName,
-            stage: 1,
-        }, {
-            withCredentials: true,
-            credentials: 'include'
-        }).then(result => {
-            dispatch(addTaskToStore(result.data));
+        // axios.post(`${process.env.REACT_APP_SERVER_URL}/createNewTask`, {
+        //     taskText,
+        //     taskName,
+        //     stage: 1,
+        // }, {
+        //     withCredentials: true,
+        //     credentials: 'include'
+        // }).then(result => {
+            dispatch(addTaskMiddleware({ taskText, taskName, stage: 1 })).catch(e => {
+                dispatch(setAlert(e.message));
+            });
             setTaskText('');
             setIsAddModalOpened(false);
-        })
+        // })
     }
 
     return (
