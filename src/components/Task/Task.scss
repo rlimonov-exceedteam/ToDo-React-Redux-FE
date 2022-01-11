@@ -1,13 +1,19 @@
 .task {
-    outline: 1px solid black;
+    background-color: rgba(243, 241, 241, 0.575);
+    outline: 1px solid rgb(201, 200, 200);
     margin: 5px;
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 0.5rem;
 
-    p {
+    .taskName {
+        cursor: pointer;
+    }
+
+    h6{
         text-align: justify;
-        font-size: 1rem;
+        margin: 0;
+        padding-bottom: 0.5rem;
     }
 
     .icons {
@@ -16,4 +22,8 @@
         cursor: pointer;
         font-size: 1rem;
     }
+}
+
+.task:hover {
+    box-shadow: 0px 0px 5px darkgrey;
 }

@@ -1,42 +1,24 @@
-import { useState } from 'react';
 import {
     ModalFooter,
     ModalHeader,
     Button,
     Modal
 } from 'reactstrap';
-import ErrorAlert from '../../components/ErrorAlert/ErrorAlert';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setAlert } from '../../redux/slices/errorAlertSlice';
+import { deleteTaskMiddleware } from '../../redux/slices/taskSlice';
 
-const DeleteTaskModal = ({
-    setIsDeleteModalOpened,
-    isDeleteModalOpened,
-    setAllTasks,
-    allTasks,
-    _id
-}) => {
-    const [alert, setAlert] = useState({ isOpen: false, text: '' });
-    const { isOpen, text } = alert;
+const DeleteTaskModal = ({ setIsDeleteModalOpened, isDeleteModalOpened, _id }) => {
+    const dispatch = useDispatch();
 
     const deleteTask = async () => {
-        const token = localStorage.getItem('token');
-
-        await axios.delete(`${process.env.REACT_APP_SERVER_URL}/deleteTask?_id=${_id}`, {
-            headers: {
-                token
-            }
-        })
+        dispatch(deleteTaskMiddleware(_id))
         .then(() => {
-            const newArray = allTasks.filter(elem => elem._id !== _id);
-            setAllTasks([...newArray]);
             setIsDeleteModalOpened(false);
         })
         .catch(e => {
-            setAlert({
-                text: e.message,
-                isOpen: true
-              });
-        })
+            dispatch(setAlert(e.message));
+        });
     }
 
     return (
@@ -44,7 +26,7 @@ const DeleteTaskModal = ({
             <Modal
                 isOpen={isDeleteModalOpened}
                 centered
-                size=""
+                bssize=""
                 toggle={() => setIsDeleteModalOpened(false)}
             >
                 <ModalHeader>
@@ -57,17 +39,11 @@ const DeleteTaskModal = ({
                     >
                         Delete
                     </Button>
-                    {' '}
                     <Button onClick={() => setIsDeleteModalOpened(false)}>
                         Cancel
                     </Button>
                 </ModalFooter>
             </Modal>
-            <ErrorAlert 
-                text={text}
-                isOpen={isOpen}
-                setAlert={setAlert}
-            />
         </div>
     )
 }

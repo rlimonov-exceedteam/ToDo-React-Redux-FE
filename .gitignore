@@ -12,7 +12,7 @@ bin-release/
 *.air
 *.ipa
 *.apk
-*.env
+.env
 
 node_modules/
 jspm_packages/

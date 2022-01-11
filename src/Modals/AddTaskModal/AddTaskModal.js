@@ -8,28 +8,21 @@ import {
     Modal,
     Label
 } from 'reactstrap';
-import axios from 'axios';
+import { setAlert } from '../../redux/slices/errorAlertSlice';
+import { useDispatch } from 'react-redux';
+import { addTaskMiddleware } from '../../redux/slices/taskSlice';
 
-const AddTaskModal = ({
-    setIsAddModalOpened,
-    isAddModalOpened,
-    setAllTasks,
-    allTasks
-}) => {
+const AddTaskModal = ({ setIsAddModalOpened, isAddModalOpened, }) => {
+    const dispatch = useDispatch();
     const [taskText, setTaskText] = useState('');
+    const [taskName, setTaskName] = useState('');
 
     const addTask = () => {
-        axios.post(`${process.env.REACT_APP_SERVER_URL}/createNewTask`, {
-            taskText,
-            stage: 1,
-        }, {
-            withCredentials: true, 
-            credentials: 'include'
-        }).then(result => {
-            setAllTasks([...allTasks, result.data])
-            setTaskText('');
-            setIsAddModalOpened(false);
-        })
+        dispatch(addTaskMiddleware({ taskText, taskName, stage: 1 })).catch(e => {
+            dispatch(setAlert(e.message));
+        });
+        setTaskText('');
+        setIsAddModalOpened(false);
     }
 
     return (
@@ -37,13 +30,22 @@ const AddTaskModal = ({
             <Modal
                 isOpen={isAddModalOpened}
                 centered
-                size=""
+                bssize=""
                 toggle={() => setIsAddModalOpened(false)}
             >
                 <ModalHeader toggle={() => setIsAddModalOpened(false)}>
                     Add new task
                 </ModalHeader>
                 <ModalBody>
+                    <Label for="printName">
+                        Name a task
+                    </Label>
+                    <Input
+                        id="printName"
+                        name="printName"
+                        value={taskName}
+                        onChange={(e) => setTaskName(e.currentTarget.value)}
+                    />
                     <Label for="exampleText">
                         Print a description
                     </Label>

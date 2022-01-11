@@ -8,45 +8,27 @@ import {
     Modal,
     Label
 } from 'reactstrap';
-import ErrorAlert from '../../components/ErrorAlert/ErrorAlert';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setAlert } from '../../redux/slices/errorAlertSlice';
+import { updateTaskMiddleware } from '../../redux/slices/taskSlice';
 
 const UpdateTaskModal = ({
     setIsUpdateModalOpened,
     isUpdateModalOpened,
-    setAllTasks,
-    allTasks,
     task
 }) => {
     const { taskText, _id } = task;
+    const dispatch = useDispatch();
 
     const [modalTaskText, setModalTaskText] = useState(taskText);
-    const [alert, setAlert] = useState({ isOpen: false, text: '' });
-    const { isOpen, text } = alert;
 
-    const updateTaskText = async () => {
-        const token = localStorage.getItem('token');
-
-        await axios.patch(`${process.env.REACT_APP_SERVER_URL}/updateTask`, {
-            taskText: modalTaskText,
-            _id
-        }, {
-            headers: { 
-                token 
-            }
-        })
+    const updateTaskText = async () => { 
+        dispatch(updateTaskMiddleware({ taskText: modalTaskText, _id }))
         .then(() => {
-            const index = allTasks.findIndex(elem => elem._id === _id);
-            allTasks[index].taskText = modalTaskText;
-
-            setAllTasks([...allTasks]);
             setIsUpdateModalOpened(false);
         })
         .catch(e => {
-            setAlert({
-                text: e.message,
-                isOpen: true
-            });
+            dispatch(setAlert(e.message));
         });
     }
 
@@ -55,7 +37,7 @@ const UpdateTaskModal = ({
             <Modal
                 isOpen={isUpdateModalOpened}
                 centered
-                size=""
+                bssize=""
                 toggle={() => setIsUpdateModalOpened(false)}
             >
                 <ModalHeader toggle={() => setIsUpdateModalOpened(false)}>
@@ -85,11 +67,6 @@ const UpdateTaskModal = ({
                     </Button>
                 </ModalFooter>
             </Modal>
-            <ErrorAlert
-                text={text}
-                isOpen={isOpen}
-                setAlert={setAlert}
-            />
         </div>
     )
 }
